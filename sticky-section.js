@@ -1,5 +1,3 @@
-/* Based on Nalinda's plugin */
-
 define([
     'jquery',
     'underscore',
@@ -10,12 +8,14 @@ define([
 
     $.widget('drgz.stickySection', {
         options: {
-            stickyfrom: 0, // additional space before it come to top of the page
-            desktopOnly: true, //only add the sticky in desktop
+            stickyfrom: 0, /* additional space before it come to top of the page */
+            disableForDesktop: false, /* disable sticky for desktop */
+            disableForTablet: false, /* disable sticky for tablet */
+            disableForMobile: true, /* disable sticky for mobile */
             topOffset: 0,
             stickyFromItemSelector: null,
             stickyToItemSelector: null,
-            throttle: false,
+            throttle: false, /* Setting throttle:true makes the plugin wait 300ms and then animates to the sticky position */
             hideItem: '.product-title-container',
             extraGapTop: 0,
             initialExtraGapTop: 0
@@ -34,15 +34,6 @@ define([
             this._callSticky();
         },
 
-        // desktop: function () {
-        //     this._callSticky();
-        //
-        // },
-        //
-        // mobile: function () {
-        //     this.destroySticky();
-        // },
-
         _callSticky: function () {
             var self = this;
 
@@ -57,9 +48,6 @@ define([
             $(window).on('scroll.ns', onScroll);
 
         },
-        // destroySticky: function () {
-        //     $(window).off('scroll.ns');
-        // },
 
         _placeSticky: function () {
 
@@ -68,8 +56,11 @@ define([
             if (self.element.is(':hidden')) {
                 return;
             }
-            if (self.options.desktopOnly && utility.isMobile()) {
-                return;
+
+            if (self.options.disableForDesktop && utility.isDesktop() ||
+                self.options.disableForTablet && utility.isTablet() ||
+                self.options.disableForMobile && utility.isMobile()) {
+                    return;
             }
 
             var scrollTop = $(window).scrollTop() + self.options.topOffset;
