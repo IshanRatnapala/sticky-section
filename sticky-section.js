@@ -8,14 +8,13 @@ define([
 
     $.widget('drgz.stickySection', {
         options: {
-            stickyfrom: 0, /* additional space before it come to top of the page */
-            disableForDesktop: false, /* disable sticky for desktop */
-            disableForTablet: false, /* disable sticky for tablet */
-            disableForMobile: true, /* disable sticky for mobile */
+            disableForDesktop: false,   /* disable sticky for desktop */
+            disableForTablet: false,    /* disable sticky for tablet */
+            disableForMobile: true,     /* disable sticky for mobile */
             topOffset: 0,
             stickyFromItemSelector: null,
             stickyToItemSelector: null,
-            throttle: false, /* Setting throttle:true makes the plugin wait 300ms and then animates to the sticky position */
+            throttle: false,            /* Setting throttle:true makes the plugin wait 300ms and then animates to the sticky position */
             hideItem: '.product-title-container',
             extraGapTop: 0,
             initialExtraGapTop: 0
@@ -60,14 +59,16 @@ define([
             if (self.options.disableForDesktop && utility.isDesktop() ||
                 self.options.disableForTablet && utility.isTablet() ||
                 self.options.disableForMobile && utility.isMobile()) {
-                    return;
+
+                self._setPosition(0, false);
+                return;
             }
 
             var scrollTop = $(window).scrollTop() + self.options.topOffset;
             var parentTop = self.stickyFrom.offset().top;
             var parentBottom = self.stickyTo.length ? self.stickyTo.offset().top : (self.stickyFrom.offset().top + self.stickyFrom.height());
 
-            var elementHeight =  self.element.outerHeight(true);
+            var elementHeight = self.element.outerHeight(true);
 
             self.element.css('position', 'relative');
 
@@ -76,7 +77,7 @@ define([
             }
             if (scrollTop > parentTop && scrollTop < parentBottom - elementHeight - self.options.extraGapTop) {
                 var topValForCenterRange = scrollTop - parentTop + self.options.extraGapTop + self.options.initialExtraGapTop;
-                self._setPosition(topValForCenterRange > 0  ? topValForCenterRange : 0, self.options.throttle);
+                self._setPosition(topValForCenterRange > 0 ? topValForCenterRange : 0, self.options.throttle);
             }
             if (scrollTop > parentBottom - elementHeight - self.options.extraGapTop) {
                 var topValForBottomPos = parentBottom - parentTop - elementHeight;
