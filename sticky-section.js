@@ -2,8 +2,9 @@ define([
     'jquery',
     'underscore',
     'utility',
+    'rjsResolver',
     'jquery/ui'
-], function ($, _, utility) {
+], function ($, _, utility, resolver) {
     "use strict";
 
     $.widget('drgz.stickySection', {
@@ -23,14 +24,17 @@ define([
         _create: function () {
             var self = this;
 
-            self.stickyFrom = $(self.options.stickyFromItemSelector).length ? $(self.options.stickyFromItemSelector) : self.element.parent();
-            self.stickyTo = $(self.options.stickyToItemSelector);
+            //to make sure all the dependecies (elements) are loaded
+            resolver(function () {
+                self.stickyFrom = $(self.options.stickyFromItemSelector).length ? $(self.options.stickyFromItemSelector) : self.element.parent();
+                self.stickyTo = $(self.options.stickyToItemSelector);
 
-            self.options.initialExtraGapTop = self.options.extraGapTop;
+                self.options.initialExtraGapTop = self.options.extraGapTop;
 
-            self.element.addClass('sticky-element');
+                self.element.addClass('sticky-element');
 
-            this._callSticky();
+                self._callSticky();
+            });
         },
 
         _callSticky: function () {
