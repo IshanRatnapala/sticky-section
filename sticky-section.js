@@ -18,6 +18,7 @@ define([
             throttle: false,            /* Setting throttle:true makes the plugin wait 300ms and then animates to the sticky position */
             hideItem: '.product-title-container',
             extraGapTop: 0,
+            extraGapBottom: 0,
             initialExtraGapTop: 0
         },
 
@@ -72,20 +73,25 @@ define([
             var parentTop = self.stickyFrom.offset().top;
             var parentBottom = self.stickyTo.length ? self.stickyTo.offset().top : (self.stickyFrom.offset().top + self.stickyFrom.height());
 
+            parentBottom = parentBottom - self.options.extraGapBottom;
+
             var elementHeight = self.element.outerHeight(true);
 
             self.element.css('position', 'relative');
 
             if (scrollTop < parentTop) {
                 self._setPosition(0, self.options.throttle);
+                self.element.addClass('at-start').removeClass('at-end');
             }
             if (scrollTop > parentTop && scrollTop < parentBottom - elementHeight - self.options.extraGapTop) {
                 var topValForCenterRange = scrollTop - parentTop + self.options.extraGapTop + self.options.initialExtraGapTop;
                 self._setPosition(topValForCenterRange > 0 ? topValForCenterRange : 0, self.options.throttle);
+                self.element.removeClass('at-start at-end');
             }
             if (scrollTop > parentBottom - elementHeight - self.options.extraGapTop) {
                 var topValForBottomPos = parentBottom - parentTop - elementHeight;
                 self._setPosition(topValForBottomPos > 0 ? topValForBottomPos : 0, self.options.throttle);
+                self.element.addClass('at-end').removeClass('at-start');
             }
 
         },
